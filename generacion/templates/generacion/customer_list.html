@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Clientes</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        .controls { margin-bottom: 20px; background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 10px;}
+        .controls form { display: flex; gap: 10px; align-items: center; }
+        .controls label { font-weight: bold; }
+        .controls input[type="text"], .controls select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .controls button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 44px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .pagination span.current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Clientes CRM</h1>
+
+    <div class="controls">
+        <form action="" method="get">
+            <label for="q">Buscar:</label>
+            <input type="text" id="q" name="q" placeholder="Nombre o empresa" value="{{ request.GET.q }}">
+
+            <label for="order_by">Ordenar por:</label>
+            <select id="order_by" name="order_by">
+                <option value="first_name" {% if request.GET.order_by == 'first_name' %}selected{% endif %}>Nombre</option>
+                <option value="company" {% if request.GET.order_by == 'company' %}selected{% endif %}>Compañía</option>
+                <option value="birthday" {% if request.GET.order_by == 'birthday' %}selected{% endif %}>Cumpleaños</option>
+                <option value="last_interaction" {% if request.GET.order_by == 'last_interaction' %}selected{% endif %}>Última Interacción</option>
+            </select>
+
+            <label>
+                <input type="checkbox" name="birthday_this_week" value="true" {% if request.GET.birthday_this_week == 'true' %}checked{% endif %}>
+                Cumpleaños esta semana
+            </label>
+
+            <button type="submit">Aplicar</button>
+            <button type="button" onclick="window.location.href='{% url 'customer_list' %}'">Restablecer</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre Completo</th>
+                <th>Compañía</th>
+                <th>Cumpleaños</th>
+                <th>Última Interacción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.get_full_name }}</td>
+                <td>{{ customer.company.name }}</td>
+                <td>{{ customer.get_birthday_display }}</td>
+                <td>{{ customer.last_interaction_display }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No se encontraron clientes.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.birthday_this_week %}&birthday_this_week={{ request.GET.birthday_this_week }}{% endif %}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.order_by %}&order_by={{ request.GET.order_by }}{% endif %}{% if request.GET.birthday_this_week %}&birthday_this_week={{ request.GET.birthday_this_week }}{% endif %}">Siguiente</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</body>
+</html>

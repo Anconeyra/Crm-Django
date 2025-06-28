@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al CRM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --primary-dark: #357ABD;
+            --accent-color: #F5A623;
+            --admin-color: #E74C3C;
+            --admin-dark: #C0392B;
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f8f9fa;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #A8C0FF 0%, #392B58 100%);
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background-color: var(--bg-light);
+            padding: 50px 60px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-out forwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 700;
+            line-height: 1.2;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .button {
+            display: block;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-light);
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button.admin {
+            background-color: var(--admin-color);
+        }
+        .button.admin:hover {
+            background-color: var(--admin-dark);
+        }
+
+        .decor-circle {
+            position: absolute;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(80px);
+        }
+
+        .circle-1 {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 5%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 8%;
+            background: var(--primary-dark);
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="decor-circle circle-1"></div>
+    <div class="decor-circle circle-2"></div>
+
+    <div class="container">
+        <h1>Bienvenido al Sistema CRM</h1>
+        <div class="button-group">
+            <a href="{% url 'admin:index' %}" class="button admin">Ir al Panel de Administración</a>
+            <a href="{% url 'customer_list' %}" class="button">Ver Clientes</a>
+        </div>
+    </div>
+</body>
+</html>
